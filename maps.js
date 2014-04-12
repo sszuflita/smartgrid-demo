@@ -9,9 +9,7 @@ function initialize() {
 				  mapOptions);
 
     var oRequest = new XMLHttpRequest();
-    var sURL = "http://"
-        + self.location.hostname
-	+ "/~samszuflita/maps/rossi.json";
+    var sURL = "https://raw.githubusercontent.com/sszuflita/smartgrid-demo/gh-pages/rossi.json";
     
     oRequest.open("GET",sURL,false);
     oRequest.setRequestHeader("User-Agent",navigator.userAgent);
