@@ -11,7 +11,7 @@ function initialize() {
     var oRequest = new XMLHttpRequest();
     var sURL = "http://"
 	+ self.location.hostname
-	+ "rossi.json";
+	+ "/rossi.json";
     
     oRequest.open("GET",sURL,false);
     oRequest.setRequestHeader("User-Agent",navigator.userAgent);
