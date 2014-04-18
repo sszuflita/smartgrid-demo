@@ -11,7 +11,7 @@ function initialize() {
     var oRequest = new XMLHttpRequest();
     var sURL = "http://"
     + self.location.hostname
-    + "/smartgrid-demo/rossi.json";
+    + "/smartgrid-demo/new.json";
     
     oRequest.open("GET",sURL,false);
     oRequest.setRequestHeader("User-Agent",navigator.userAgent);
@@ -76,7 +76,30 @@ function initialize() {
                     }   
                 }
             }
+            else if (layer == "UG_TRANSFORMERS") {
+                coords = feature.geometry.geometries
+                coords = coords[0]["coordinates"];
+                a = coords[0][0];
+                b = coords[0][1];
+                x = x0 + r * a + 0.00004;
+                y = y0 + s * b;
 
+                if (!isNaN(x) && !isNaN(y)) {
+                    var myLatlng = new google.maps.LatLng(y, x);
+                    var opts = {
+                          strokeColor: '#000000',
+                          strokeOpacity: 0.8,
+                          strokeWeight: 2,
+                          fillColor: '#000000',
+                          fillOpacity: 0.5,
+                          map: map,
+                          center: myLatlng,
+                          radius: 5
+                        };
+                    // Add the circle to the map.
+                    ug_trans = new google.maps.Circle(opts);    
+                }  
+            }
             else if (coords != undefined) {
                 var numPoints = coords.length;
                 var polyLine = [];
