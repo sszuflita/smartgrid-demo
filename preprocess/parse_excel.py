@@ -8,6 +8,7 @@ cable = open('cable.json', 'w')
 amps = [14, 15, 16]
 for s in wb.sheets():
     if s.name == 'XLine':
+        contents = []
         for row in range(2, s.nrows):
             entry = {}
             c = 0
@@ -15,16 +16,26 @@ for s in wb.sheets():
             for col in range(s.ncols):
                 c += 1
                 if c == 5:
-                    entry["from"] = s.cell(row,col).value
+                    val = s.cell(row,col).value
+                    pos = val.find('_')
+                    if pos != -1:
+                        val = val[:pos]
+                    entry["from"] = val
                 elif c == 6:
-                    entry["to"] = s.cell(row,col).value
+                    val = s.cell(row,col).value
+                    pos = val.find('_')
+                    if pos != -1:
+                        val = val[:pos]
+                    entry["to"] = val
                 elif c in amps:
                     if int(s.cell(row,col).value) > max_amp:
                         max_amp = int(s.cell(row,col).value) 
             entry["amps"] = max_amp
-            xline.write(json.dumps(entry) + '\n')
+            contents.append(entry)
+        xline.write(json.dumps({"contents":contents}))
 
     if s.name == "Cable":
+        contents = []
         for row in range(2, s.nrows):
             entry = {}
             c = 0
@@ -32,14 +43,23 @@ for s in wb.sheets():
             for col in range(s.ncols):
                 c += 1
                 if c == 4:
-                    entry["from"] = s.cell(row,col).value
+                    val = s.cell(row,col).value
+                    pos = val.find('_')
+                    if pos != -1:
+                        val = val[:pos]
+                    entry["from"] = val
                 elif c == 5:
-                    entry["to"] = s.cell(row,col).value
+                    val = s.cell(row,col).value
+                    pos = val.find('_')
+                    if pos != -1:
+                        val = val[:pos]
+                    entry["to"] = val
                 elif c in amps:
                     if int(s.cell(row,col).value) > max_amp:
                         max_amp = int(s.cell(row,col).value) 
             entry["amps"] = max_amp
-            cable.write(json.dumps(entry) + '\n')
+            contents.append(entry)
+        cable.write(json.dumps({"contents":contents}))
 
 xline.close()
 cable.close()
