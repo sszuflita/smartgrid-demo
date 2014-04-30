@@ -1,3 +1,9 @@
+var map;
+var oRequest;
+var lines; /* Array of all polylines */
+var counter = 0; /* Counter of dataset */
+var numDatasets = 5;
+
 /* Function to hide all labels on the map */
 function eraseMarkers(markers) {
     for (i = 0; i < markers.length; i++)
@@ -12,7 +18,7 @@ function showMarkers(markers) {
 
 /* Function to load json file at sURL. Return parsed json object
    on success. Pop an alert otherwise. */
-function loadJSON(oRequest, sURL) {
+function loadJSON(sURL) {
     oRequest.open("GET", sURL, false);
     oRequest.send(null)
     
@@ -34,8 +40,14 @@ function dxfToGPS(dxfCoord) {
     return GPSCoord;
 }
 
-function update(map, power, lines) {
-    console.log("update");
+function update(power) {
+    // Update the dataset counter and read a dataset
+    counter = counter % numDatasets + 1;
+    var sURL = "http://"
+    + self.location.hostname
+    + "/smartgrid-demo/preprocess/power_limit/power"
+    + counter.toString() + ".json";
+    power = loadJSON(sURL).contents;
     for (var i = 0; i < power.length; i++) {
         // Look for the corresponding polyline
         for (var j = 0; j < lines.length; j++) {
@@ -53,30 +65,65 @@ function update(map, power, lines) {
     }
 }
 
+function PowerControl(controlDiv) {
+
+  // Set CSS styles for the DIV containing the control
+  // Setting padding to 5 px will offset the control
+  // from the edge of the map.
+  controlDiv.style.padding = '5px';
+
+  // Set CSS for the control border.
+  var controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = 'white';
+  controlUI.style.borderStyle = 'solid';
+  controlUI.style.borderWidth = '2px';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.textAlign = 'center';
+  controlUI.title = 'Click to show time evolution ';
+  controlDiv.appendChild(controlUI);
+
+  // Set CSS for the control interior.
+  var controlText = document.createElement('div');
+  controlText.style.fontFamily = 'Arial,sans-serif';
+  controlText.style.fontSize = '12px';
+  controlText.style.paddingLeft = '4px';
+  controlText.style.paddingRight = '4px';
+  controlText.innerHTML = '<strong>Power Limit</strong>';
+  controlUI.appendChild(controlText);
+
+  // Setup the click event listeners: 
+  // show the power limits from different datasets.
+  google.maps.event.addDomListener(controlUI, 'click', function() {
+    console.log("click");
+    for (i = 0; i < 20; i ++) {
+        setTimeout(function(){update(power)}, 2000 * i);     
+    }
+  });
+}
+
 
 function initialize() {
     var mapOptions = {
         center: new google.maps.LatLng(34.116552,-117.631469),
         zoom: 15
     };
-    var map = new google.maps.Map(document.getElementById("map-canvas"),
+    map = new google.maps.Map(document.getElementById("map-canvas"),
                   mapOptions);
+    oRequest = new XMLHttpRequest();
 
-    var oRequest = new XMLHttpRequest();
+    var controlDiv = document.createElement('div');
+    var powerControl = new PowerControl(controlDiv);
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlDiv);
+
     sURL = "http://"
         + self.location.hostname
         + "/smartgrid-demo/new.json";
-    data = loadJSON(oRequest, sURL);
+    data = loadJSON(sURL);
     features = data.features;
-
-    var sURL = "http://"
-        + self.location.hostname
-        + "/smartgrid-demo/preprocess/power_limit/power1.json";
-    power = loadJSON(oRequest, sURL).contents;
 
     // Render DXF
     var markers = new Array(); // Array that stores all labels
-    var lines = new Array();
+    lines = new Array();
     for (var i = 0; i < features.length; i++) {
         feature = features[i];
         var strokeColor, strokeWeight;
@@ -182,21 +229,6 @@ function initialize() {
             polyLinePath.setMap(map);
         }
     }  
-
-
-    numDatasets = 5;
-    count = 1;
-    //while (true) {
-        count = count % numDatasets + 1;
-        // Read power info about each line
-        var sURL = "http://"
-        + "ugcs.caltech.edu/~krong/"
-        + "/smartgrid-demo/preprocess/power_limit/power"
-        + count.toString() + ".json";
-        power = loadJSON(oRequest, sURL).contents;
-        //setTimeout(function(){
-        //    update(map, power, lines), 5000});
-    //}
     
 
     // Toggle visibility of labels
