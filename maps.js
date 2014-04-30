@@ -121,6 +121,11 @@ function initialize() {
     data = loadJSON(sURL);
     features = data.features;
 
+    var sURL = "http://"
+    + self.location.hostname
+    + "/smartgrid-demo/preprocess/power_limit/power1.json";
+    power = loadJSON(sURL).contents;
+
     // Render DXF
     var markers = new Array(); // Array that stores all labels
     lines = new Array();
