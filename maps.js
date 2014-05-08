@@ -2,7 +2,10 @@ var map;
 var oRequest;
 var lines; /* Array of all polylines */
 var counter = 0; /* Counter of dataset */
-var numDatasets = 5;
+var numDatasets = 288;
+var timer = new Array();
+var elapsedTime;
+var timeDiv;
 
 /* Function to hide all labels on the map */
 function eraseMarkers(markers) {
@@ -40,21 +43,35 @@ function dxfToGPS(dxfCoord) {
     return GPSCoord;
 }
 
-function update(power) {
-    // Update the dataset counter and read a dataset
-    counter = counter % numDatasets + 1;
+/* Assume that each counter represents 5 mins, 
+   returns the time of the day,*/
+function counterToTime(counter) {
+    hour = String(Math.floor(counter / 12));
+    if (hour.length < 2)
+        hour = '0' + hour;
+    min = String(counter % 12 * 5);
+    if (min.length < 2)
+        min = '0' + min;
+
+    return hour + ':' + min + ':00';
+}
+
+function update(phase) {
     var sURL = "http://"
-    + self.location.hostname
-    + "/smartgrid-demo/preprocess/power_limit/power"
-    + counter.toString() + ".json";
-    power = loadJSON(sURL).contents;
-    for (var i = 0; i < power.length; i++) {
+    + self.location.hostname 
+    + "/smartgrid-demo/preprocess/"
+    + phase +"/line" + counter.toString() + ".json";
+    frame = loadJSON(sURL).contents;
+    for (var i = 0; i < frame.length; i++) {
         // Look for the corresponding polyline
         for (var j = 0; j < lines.length; j++) {
-            if (lines[j].ends.indexOf(power[i]["to"]) > -1 &&
-                lines[j].ends.indexOf(power[i]["from"]) > -1) {
-                // Change color to red if the power is above limit
-                if (power[i]["amps"] > 900)
+            idx1 = lines[j].ends.indexOf(frame[i]["from"]);
+            idx2 = lines[j].ends.indexOf(frame[i]["to"]);
+            if (idx1 == idx2 && idx1 > -1)
+              idx2 = lines[j].ends.indexOf(frame[i]["to"], idx1 + 1);
+            if (idx1 > -1 && idx2 > -1) {
+                // Change color to red if the current is above limit
+                if (frame[i]["amps"] > lines[j][phase]) 
                     lines[j].polyline.setOptions({strokeColor: 'red'});
                 else
                     lines[j].polyline.setOptions(
@@ -63,9 +80,23 @@ function update(power) {
             }
         }
     }
+    // Update the timer
+    elapsedTime.innerHTML = '<strong>' + counterToTime(counter) + '</strong>'
+    // Update the dataset counter and read a dataset
+    counter = counter % numDatasets + 1;
 }
 
-function PowerControl(controlDiv) {
+/* Clear demo from the map */
+function clearmap(phase) {    
+    for (var j = 0; j < lines.length; j++) {
+        lines[j].polyline.setOptions(
+            {strokeColor: lines[j].defaultColor});
+    }
+    if (map.controls[google.maps.ControlPosition.TOP_LEFT].length > 0)
+        map.controls[google.maps.ControlPosition.TOP_LEFT].pop();
+}
+
+function PhaseControl(controlDiv, phase) {
 
   // Set CSS styles for the DIV containing the control
   // Setting padding to 5 px will offset the control
@@ -76,31 +107,74 @@ function PowerControl(controlDiv) {
   var controlUI = document.createElement('div');
   controlUI.style.backgroundColor = 'white';
   controlUI.style.borderStyle = 'solid';
-  controlUI.style.borderWidth = '2px';
+  controlUI.style.borderWidth = '1px';
   controlUI.style.cursor = 'pointer';
   controlUI.style.textAlign = 'center';
-  controlUI.title = 'Click to show time evolution ';
+  controlUI.title = 'Click to show power of phase ' + phase;
   controlDiv.appendChild(controlUI);
 
   // Set CSS for the control interior.
   var controlText = document.createElement('div');
   controlText.style.fontFamily = 'Arial,sans-serif';
-  controlText.style.fontSize = '12px';
+  controlText.style.fontSize = '15px';
   controlText.style.paddingLeft = '4px';
   controlText.style.paddingRight = '4px';
-  controlText.innerHTML = '<strong>Power Limit</strong>';
+  controlText.innerHTML = '<strong>' + phase + '</strong>';
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners: 
   // show the power limits from different datasets.
   google.maps.event.addDomListener(controlUI, 'click', function() {
-    console.log("click");
-    for (i = 0; i < 20; i ++) {
-        setTimeout(function(){update(power)}, 2000 * i);     
+    if (timer.length > 0) {
+        // Clear ongoing demo for other phases
+        if (map.controls[google.maps.ControlPosition.TOP_LEFT].length > 0)
+            map.controls[google.maps.ControlPosition.TOP_LEFT].pop();
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
+        counter = 0;
+        for (i = 0; i < numDatasets; i ++) 
+            clearTimeout(timer[i]); 
+        for (i = 0; i < numDatasets; i ++) 
+            timer[i] = setTimeout(function(){update(phase)}, 100 * i);   
+        timer[numDatasets] = setTimeout(function(){clearmap()}, 100 * numDatasets);      
+    }
+    else {
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
+        for (i = 0; i < numDatasets; i ++) 
+            timer.push(setTimeout(function(){update(phase)}, 100 * i));
+        timer.push(setTimeout(function(){clearmap()}, 100 * numDatasets));
     }
   });
 }
 
+function TimeControl(controlDiv) {
+
+  // Set CSS styles for the DIV containing the control
+  // Setting padding to 5 px will offset the control
+  // from the edge of the map.
+  controlDiv.style.padding = '5px';
+
+  // Set CSS for the control border.
+  var controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = 'black';
+  controlUI.style.borderStyle = 'solid';
+  controlUI.style.borderWidth = '1px';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.textAlign = 'center';
+  controlUI.title = 'Time of the Day ';
+  controlDiv.appendChild(controlUI);
+
+  // Set CSS for the control interior.
+  var controlText = document.createElement('div');
+  controlText.style.fontFamily = 'Arial,sans-serif';
+  controlText.style.color = 'white';
+  controlText.style.fontSize = '25px';
+  controlText.style.paddingLeft = '4px';
+  controlText.style.paddingRight = '4px';
+  controlText.innerHTML = '<strong>00:00:00</strong>';
+  controlUI.appendChild(controlText);
+
+  return controlText;
+}
 
 function initialize() {
     var mapOptions = {
@@ -111,9 +185,14 @@ function initialize() {
                   mapOptions);
     oRequest = new XMLHttpRequest();
 
-    var controlDiv = document.createElement('div');
-    var powerControl = new PowerControl(controlDiv);
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlDiv);
+    var phaseDiv = document.createElement('div');
+    A = new PhaseControl(phaseDiv, 'A');
+    B = new PhaseControl(phaseDiv, 'B');
+    C = new PhaseControl(phaseDiv, 'C');
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(phaseDiv);
+
+    timeDiv = document.createElement('div');
+    elapsedTime = new TimeControl(timeDiv);
 
     sURL = "http://"
         + self.location.hostname
@@ -121,10 +200,20 @@ function initialize() {
     data = loadJSON(sURL);
     features = data.features;
 
-    var sURL = "http://"
+    sURL = "http://"
     + self.location.hostname
-    + "/smartgrid-demo/preprocess/power_limit/power1.json";
-    power = loadJSON(sURL).contents;
+    + "/smartgrid-demo/preprocess/line_current_A.json";
+    phaseA = loadJSON(sURL).contents;
+    sURL = "http://"
+    //+ self.location.hostname
+        + "ugcs.caltech.edu/~krong"
+
+    + "/smartgrid-demo/preprocess/line_current_B.json";
+    phaseB = loadJSON(sURL).contents;
+    sURL = "http://"
+    + self.location.hostname
+    + "/smartgrid-demo/preprocess/line_current_C.json";
+    phaseC = loadJSON(sURL).contents;
 
     // Render DXF
     var markers = new Array(); // Array that stores all labels
@@ -192,17 +281,17 @@ function initialize() {
             }  
         }
         else if (coords != undefined) {
-            // Check for current loads
+            // Check for current limits
             entity = feature.properties.ExtendedEntity;
-            var endpoints;
+            var endpoints, IA, IB, IC;
             var defaultColor = strokeColor;
-            for (var j = 0; j < power.length; j++) {
-                if (entity.indexOf(power[j]["to"]) > -1 &&
-                    entity.indexOf(power[j]["from"]) > -1) {
-                    endpoints = power[j]["from"] + ',' + power[j]["to"];
-                    if (power[j]["amps"] > 900)
-                        strokeColor = '#FF0000';
-                    break;
+            for (var j = 0; j < phaseA.length; j++) {
+                if (entity.indexOf(phaseA[j]["to"]) > -1 &&
+                    entity.indexOf(phaseA[j]["from"]) > -1) {
+                    endpoints = phaseA[j]["from"] + ',' + phaseA[j]["to"];
+                    IA = phaseA[j]["amps"];
+                    IB = phaseB[j]["amps"];
+                    IC = phaseC[j]["amps"];
                 }
             }
 
@@ -224,11 +313,15 @@ function initialize() {
                 strokeWeight: strokeWeight
             });
             
+            // Cache polylines 
             if (endpoints != undefined) {
                 var valueToPush = { }; 
                 valueToPush["ends"] = endpoints;
                 valueToPush["polyline"] = polyLinePath;
                 valueToPush["defaultColor"] = defaultColor;
+                valueToPush["A"] = IA;
+                valueToPush["B"] = IB;
+                valueToPush["C"] = IC;
                 lines.push(valueToPush);    
             }
             polyLinePath.setMap(map);

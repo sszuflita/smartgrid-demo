@@ -1,0 +1,36 @@
+                     name: {2065x1 cell}
+                      bus: [2065x869 double]
+                   branch: [2064x26 double]
+                      cap: [5x4 uint16]
+                   basekV: 6.9282
+                  basekVA: 100
+                     root: 1
+              rootVoltage: [1x3 double]
+        voltageLowerBound: 0.9500
+        voltageUpperBound: 1.0500
+         voltage_root_bus: 1.0393
+      voltage_lower_bound: 0.9500
+      voltage_upper_bound: 1.0500
+         substation_price: [1x289 double]
+    substation_price_type: 'LMP'
+               cap_config: [5x865 double]
+               pool_specs: [229x2 double]
+               hvac_specs: [938x10 double]
+                     hvac: [938x290 double]
+                       pv: [135x290 double]
+                       ev: [79x290 double]
+                     pool: [229x290 double]
+                 ev_specs: [79x4 double]
+                 pv_specs: [135x1 double]
+              indoor_temp: [938x289 double]
+        pool_controllable: 1
+        hvac_controllable: 0
+          ev_controllable: 1
+          pv_controllable: 1
+              description: '2016optimizedNoHvac'
+               start_time: '2012_07_15_00_00_00_PDT'
+                 end_time: '2012_07_15_23_55_00_PDT'
+           OUTPUT_VOLTAGE: [2065x865 double]
+           OUTPUT_CURRENT: [2064x866 double]
+              OUTPUT_LOSS: [1x288 double]
+     OUTPUT_SUB_INJECTION: [1x864 double]
