@@ -205,9 +205,7 @@ function initialize() {
     + "/smartgrid-demo/preprocess/line_current_A.json";
     phaseA = loadJSON(sURL).contents;
     sURL = "http://"
-    //+ self.location.hostname
-        + "ugcs.caltech.edu/~krong"
-
+    + self.location.hostname
     + "/smartgrid-demo/preprocess/line_current_B.json";
     phaseB = loadJSON(sURL).contents;
     sURL = "http://"
