@@ -71,11 +71,19 @@ function update(phase) {
               idx2 = lines[j].ends.indexOf(frame[i]["to"], idx1 + 1);
             if (idx1 > -1 && idx2 > -1) {
                 // Change color to red if the current is above limit
-                if (frame[i]["amps"] > lines[j][phase]) 
+                //if (frame[i]["amps"] > lines[j][phase]) 
+                //    lines[j].polyline.setOptions({strokeColor: 'red'});
+                //else
+                //    lines[j].polyline.setOptions(
+                //        {strokeColor: lines[j].defaultColor});
+                if (frame[i]["amps"] > 0.7 * lines[j][phase]) 
                     lines[j].polyline.setOptions({strokeColor: 'red'});
+                else if (frame[i]["amps"] > 0.01 * lines[j][phase])
+                    lines[j].polyline.setOptions({strokeColor: 'yellow'});
                 else
                     lines[j].polyline.setOptions(
                         {strokeColor: lines[j].defaultColor});
+
                 break;
             }
         }

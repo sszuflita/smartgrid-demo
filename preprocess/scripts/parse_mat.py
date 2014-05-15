@@ -82,7 +82,9 @@ for k in range(3):
                 entry = {}
                 entry["from"] = names[nodes[i][0] - 1]
                 entry["to"] = names[nodes[i][1] - 1]
-                entry["amps"] = float(I[k][i][j].split()[0])
+                a = float(I[k][i][j].split()[0])
+                b = float(I[k][i][j].split()[1])
+                entry["amps"] = math.sqrt(a * a + b * b)
                 contents.append(entry)
         # Write to file
         f = open("../" + phase[k] + '/line' + str(j) + '.json', 'w')
