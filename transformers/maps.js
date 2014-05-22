@@ -352,6 +352,13 @@ function initialize() {
 
 
     var iconURL = 'http://cdn1.iofferphoto.com/img/item/123/991/445/Vc0f.jpg';
+    var iconSize = 
+    var image = {
+	url: iconURL,
+	size: new google.maps.Size(20, 20),
+	origin: new google.maps.Point(0, 0),
+	anchor: new google.maps.Point(0, 0)
+    };
 
     /* write transformers */
     ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
@@ -359,11 +366,11 @@ function initialize() {
     for (var i = 0; i < ftable.rows.length; i++) {
 	var trans = ftable.rows[i];
 	console.log(trans);
-        var myLatlng = new google.maps.LatLng(trans[3],trans[2]);
+        var myLatLng = new google.maps.LatLng(trans[3],trans[2]);
 	var marker = new google.maps.Marker({
-	    position: myLatlng,
+	    position: myLatLng,
 	    map: map,
-	    icon: iconURL
+	    icon: image
 	});
     }
 }
