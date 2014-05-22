@@ -352,11 +352,7 @@ function initialize() {
 
 
     var iconURL = 'http://cdn1.iofferphoto.com/img/item/123/991/445/Vc0f.jpg';
-    var marker = new google.maps.Marker({
-	position: myLatLng,
-	map: map,
-	icon: iconURL
-    });
+
     /* write transformers */
     ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
     ftable = loadJSON(ftableURL);
