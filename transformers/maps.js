@@ -351,7 +351,7 @@ function initialize() {
     });
 
     ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
-    alert(httpGet(ftableURL));
+    console.log(loadJSON(ftableURL));
 
 }
 google.maps.event.addDomListener(window, 'load', initialize);
