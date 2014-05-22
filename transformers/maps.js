@@ -355,7 +355,7 @@ function initialize() {
     var marker = new google.maps.Marker({
 	position: myLatLng,
 	map: map,
-	icon: iconURL;
+	icon: iconURL
     });
     /* write transformers */
     ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
