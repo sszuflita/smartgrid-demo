@@ -365,7 +365,7 @@ function initialize() {
 	console.log(trans);
         var myLatlng = new google.maps.LatLng(trans[3],trans[2]);
 	var marker = new google.maps.Marker({
-	    position: 
+	    position: myLatlng,
 	    map: map,
 	    icon: iconURL;
 	});
