@@ -31,7 +31,7 @@ function loadJSON(sURL) {
     alert("Error executing XMLHttpRequest call!");
 }
 
-    
+
 function dxfToGPS(dxfCoord) {
     x0 = -126.899588;
     r = 3.4109652 / 1000000;
@@ -67,9 +67,9 @@ function httpGet(theUrl) {
 
 function update(phase) {
     var sURL = "http://"
-    + self.location.hostname 
-    + "/smartgrid-demo/preprocess/"
-    + phase +"/line" + counter.toString() + ".json";
+	+ self.location.hostname 
+	+ "/smartgrid-demo/preprocess/"
+	+ phase +"/line" + counter.toString() + ".json";
     frame = loadJSON(sURL).contents;
     for (var i = 0; i < frame.length; i++) {
         // Look for the corresponding polyline
@@ -77,7 +77,7 @@ function update(phase) {
             idx1 = lines[j].ends.indexOf(frame[i]["from"]);
             idx2 = lines[j].ends.indexOf(frame[i]["to"]);
             if (idx1 == idx2 && idx1 > -1)
-              idx2 = lines[j].ends.indexOf(frame[i]["to"], idx1 + 1);
+		idx2 = lines[j].ends.indexOf(frame[i]["to"], idx1 + 1);
             if (idx1 > -1 && idx2 > -1) {
                 // Change color to red if the current is above limit
                 //if (frame[i]["amps"] > lines[j][phase]) 
@@ -115,82 +115,82 @@ function clearmap(phase) {
 
 function PhaseControl(controlDiv, phase) {
 
-  // Set CSS styles for the DIV containing the control
-  // Setting padding to 5 px will offset the control
-  // from the edge of the map.
-  controlDiv.style.padding = '5px';
+    // Set CSS styles for the DIV containing the control
+    // Setting padding to 5 px will offset the control
+    // from the edge of the map.
+    controlDiv.style.padding = '5px';
 
-  // Set CSS for the control border.
-  var controlUI = document.createElement('div');
-  controlUI.style.backgroundColor = 'white';
-  controlUI.style.borderStyle = 'solid';
-  controlUI.style.borderWidth = '1px';
-  controlUI.style.cursor = 'pointer';
-  controlUI.style.textAlign = 'center';
-  controlUI.title = 'Click to show power of phase ' + phase;
-  controlDiv.appendChild(controlUI);
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = 'white';
+    controlUI.style.borderStyle = 'solid';
+    controlUI.style.borderWidth = '1px';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to show power of phase ' + phase;
+    controlDiv.appendChild(controlUI);
 
-  // Set CSS for the control interior.
-  var controlText = document.createElement('div');
-  controlText.style.fontFamily = 'Arial,sans-serif';
-  controlText.style.fontSize = '15px';
-  controlText.style.paddingLeft = '4px';
-  controlText.style.paddingRight = '4px';
-  controlText.innerHTML = '<strong>' + phase + '</strong>';
-  controlUI.appendChild(controlText);
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.fontFamily = 'Arial,sans-serif';
+    controlText.style.fontSize = '15px';
+    controlText.style.paddingLeft = '4px';
+    controlText.style.paddingRight = '4px';
+    controlText.innerHTML = '<strong>' + phase + '</strong>';
+    controlUI.appendChild(controlText);
 
-  // Setup the click event listeners: 
-  // show the power limits from different datasets.
-  google.maps.event.addDomListener(controlUI, 'click', function() {
-    if (timer.length > 0) {
-        // Clear ongoing demo for other phases
-        if (map.controls[google.maps.ControlPosition.TOP_LEFT].length > 0)
-            map.controls[google.maps.ControlPosition.TOP_LEFT].pop();
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
-        counter = 0;
-        for (i = 0; i < numDatasets; i ++) 
-            clearTimeout(timer[i]); 
-        for (i = 0; i < numDatasets; i ++) 
-            timer[i] = setTimeout(function(){update(phase)}, 100 * i);   
-        timer[numDatasets] = setTimeout(function(){clearmap()}, 100 * numDatasets);      
-    }
-    else {
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
-        for (i = 0; i < numDatasets; i ++) 
-            timer.push(setTimeout(function(){update(phase)}, 100 * i));
-        timer.push(setTimeout(function(){clearmap()}, 100 * numDatasets));
-    }
-  });
+    // Setup the click event listeners: 
+    // show the power limits from different datasets.
+    google.maps.event.addDomListener(controlUI, 'click', function() {
+	if (timer.length > 0) {
+            // Clear ongoing demo for other phases
+            if (map.controls[google.maps.ControlPosition.TOP_LEFT].length > 0)
+		map.controls[google.maps.ControlPosition.TOP_LEFT].pop();
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
+            counter = 0;
+            for (i = 0; i < numDatasets; i ++) 
+		clearTimeout(timer[i]); 
+            for (i = 0; i < numDatasets; i ++) 
+		timer[i] = setTimeout(function(){update(phase)}, 100 * i);   
+            timer[numDatasets] = setTimeout(function(){clearmap()}, 100 * numDatasets);      
+	}
+	else {
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
+            for (i = 0; i < numDatasets; i ++) 
+		timer.push(setTimeout(function(){update(phase)}, 100 * i));
+            timer.push(setTimeout(function(){clearmap()}, 100 * numDatasets));
+	}
+    });
 }
 
 function TimeControl(controlDiv) {
 
-  // Set CSS styles for the DIV containing the control
-  // Setting padding to 5 px will offset the control
-  // from the edge of the map.
-  controlDiv.style.padding = '5px';
+    // Set CSS styles for the DIV containing the control
+    // Setting padding to 5 px will offset the control
+    // from the edge of the map.
+    controlDiv.style.padding = '5px';
 
-  // Set CSS for the control border.
-  var controlUI = document.createElement('div');
-  controlUI.style.backgroundColor = 'black';
-  controlUI.style.borderStyle = 'solid';
-  controlUI.style.borderWidth = '1px';
-  controlUI.style.cursor = 'pointer';
-  controlUI.style.textAlign = 'center';
-  controlUI.title = 'Time of the Day ';
-  controlDiv.appendChild(controlUI);
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = 'black';
+    controlUI.style.borderStyle = 'solid';
+    controlUI.style.borderWidth = '1px';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Time of the Day ';
+    controlDiv.appendChild(controlUI);
 
-  // Set CSS for the control interior.
-  var controlText = document.createElement('div');
-  controlText.style.fontFamily = 'Arial,sans-serif';
-  controlText.style.color = 'white';
-  controlText.style.fontSize = '25px';
-  controlText.style.paddingLeft = '4px';
-  controlText.style.paddingRight = '4px';
-  controlText.innerHTML = '<strong>00:00:00</strong>';
-  controlUI.appendChild(controlText);
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.fontFamily = 'Arial,sans-serif';
+    controlText.style.color = 'white';
+    controlText.style.fontSize = '25px';
+    controlText.style.paddingLeft = '4px';
+    controlText.style.paddingRight = '4px';
+    controlText.innerHTML = '<strong>00:00:00</strong>';
+    controlUI.appendChild(controlText);
 
-  return controlText;
+    return controlText;
 }
 
 function initialize() {
@@ -199,7 +199,7 @@ function initialize() {
         zoom: 15
     };
     map = new google.maps.Map(document.getElementById("map-canvas"),
-                  mapOptions);
+			      mapOptions);
     oRequest = new XMLHttpRequest();
 
     var phaseDiv = document.createElement('div');
@@ -218,16 +218,16 @@ function initialize() {
     features = data.features;
 
     sURL = "http://"
-    + self.location.hostname
-    + "/smartgrid-demo/preprocess/line_current_A.json";
+	+ self.location.hostname
+	+ "/smartgrid-demo/preprocess/line_current_A.json";
     phaseA = loadJSON(sURL).contents;
     sURL = "http://"
-    + self.location.hostname
-    + "/smartgrid-demo/preprocess/line_current_B.json";
+	+ self.location.hostname
+	+ "/smartgrid-demo/preprocess/line_current_B.json";
     phaseB = loadJSON(sURL).contents;
     sURL = "http://"
-    + self.location.hostname
-    + "/smartgrid-demo/preprocess/line_current_C.json";
+	+ self.location.hostname
+	+ "/smartgrid-demo/preprocess/line_current_C.json";
     phaseC = loadJSON(sURL).contents;
 
     // Render DXF
@@ -282,15 +282,15 @@ function initialize() {
             if (!isNaN(x) && !isNaN(y)) {
                 var myLatlng = new google.maps.LatLng(y, x);
                 var opts = {
-                      strokeColor: '#000000',
-                      strokeOpacity: 0.8,
-                      strokeWeight: 2,
-                      fillColor: '#000000',
-                      fillOpacity: 0.5,
-                      map: map,
-                      center: myLatlng,
-                      radius: 5
-                    };
+                    strokeColor: '#000000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#000000',
+                    fillOpacity: 0.5,
+                    map: map,
+                    center: myLatlng,
+                    radius: 5
+                };
                 // Add the circle to the map.
                 ug_trans = new google.maps.Circle(opts);    
             }  
@@ -350,12 +350,25 @@ function initialize() {
         if (map.getZoom() >= 16.5) showMarkers(markers);
     });
 
+
+    var iconURL = 'http://cdn1.iofferphoto.com/img/item/123/991/445/Vc0f.jpg';
+    var marker = new google.maps.Marker({
+	position: myLatLng,
+	map: map,
+	icon: iconURL;
+    });
     /* write transformers */
     ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
     ftable = loadJSON(ftableURL);
     for (var i = 0; i < ftable.rows.length; i++) {
 	var trans = ftable.rows[i];
 	console.log(trans);
+        var myLatlng = new google.maps.LatLng(trans[3],trans[2]);
+	var marker = new google.maps.Marker({
+	    position: 
+	    map: map,
+	    icon: iconURL;
+	});
     }
 }
 google.maps.event.addDomListener(window, 'load', initialize);
