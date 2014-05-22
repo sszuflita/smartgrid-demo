@@ -352,7 +352,6 @@ function initialize() {
 
 
     var iconURL = 'http://cdn1.iofferphoto.com/img/item/123/991/445/Vc0f.jpg';
-    var iconSize = 
     var image = {
 	url: iconURL,
 	size: new google.maps.Size(20, 20),
