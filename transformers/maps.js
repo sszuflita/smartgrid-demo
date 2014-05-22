@@ -350,9 +350,13 @@ function initialize() {
         if (map.getZoom() >= 16.5) showMarkers(markers);
     });
 
+    /* write transformers */
     ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
-    console.log(loadJSON(ftableURL));
-
+    ftable = loadJSON(ftableURL);
+    for (var i = 0; i < ftable.rows.length; i++) {
+	var trans = ftable.rows[i];
+	console.log(trans);
+    }
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
