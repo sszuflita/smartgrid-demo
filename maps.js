@@ -356,10 +356,10 @@ function initialize() {
 	var circle = new google.maps.Circle({
 	    center: myLatLng,
 	    radius: 10,
-	    strokeColor: '#FF0000',
+	    strokeColor: 'red',
 	    strokeOpacity: 0.8,
 	    strokeWeight: 2,
-	    fillColor: '#FF0000',
+	    fillColor: 'red',
 	    fillOpacity: 0.35,
 	    map: map
 	});
