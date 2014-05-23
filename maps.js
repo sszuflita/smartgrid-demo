@@ -380,14 +380,25 @@ function initialize() {
 	var lim = limits["A"][i];
 	var id = lim["id"];
 	if (id in transformers) {
-	    console.log(id);
 	    var trans = transformers[id];
-	    console.log(trans);
 	    trans["phase_A_limit"] = lim["lim"];
 	    transformers[id] = trans;
-	    console.log(transformers[id]);
 	}
     }
+    for (var i = 0; i < limits["B"].length; i++) {
+	var lim = limits["B"][i];
+	var id = lim["id"];
+	if (id in transformers) {
+	    var trans = transformers[id];
+	    if (trans["phases"].length > 1) {
+		console.log(trans);
+		trans["phase_B_limit"] = lim["lim"];
+		transformers[id] = trans;
+		console.log(transformers[id]);
+	    }
+	}
+    }
+
     console.log(limits);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
