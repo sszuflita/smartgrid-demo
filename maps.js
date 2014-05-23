@@ -380,7 +380,7 @@ function initialize() {
 	var id = lim["id"];
 	var trans = transformers[id];
 	trans["phase_A_limit"] = lim["lim"];
-	transfomers[id] = trans;
+	transformers[id] = trans;
 	console.log(transformers[id]);
     }
     console.log(limits);
