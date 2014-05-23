@@ -6,7 +6,7 @@ var numDatasets = 288;
 var timer = new Array();
 var elapsedTime;
 var timeDiv;
-var transformers; /* Object of all transformers */
+var transformers = {}; /* Object of all transformers */
 
 /* Function to hide all labels on the map */
 function eraseMarkers(markers) {
