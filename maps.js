@@ -105,13 +105,13 @@ function update(phase) {
 	    }
 	    else if (power.pow > lim * 0.01) {
 		trans.handle.setOptions(
-		    {strokeColor: 'red',
-		     fillColor: 'red'});
+		    {strokeColor: 'yellow',
+		     fillColor: 'yellow'});
 	    }
 	    else {
 		trans.handle.setOptions(
-		    {strokeColor: 'red',
-		     fillColor: 'red'});
+		    {strokeColor: 'green',
+		     fillColor: 'green'});
 	    }
 	}
     }
