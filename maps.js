@@ -364,7 +364,7 @@ function initialize() {
 	    map: map
 	});
 
-	var trans = {
+var trans = {
 	    id: id,
 	    phases: phases,
 	    latlng: myLatLng,
@@ -397,6 +397,20 @@ function initialize() {
 		console.log(transformers[id]);
 	    }
 	}
+    }
+    for (var i = 0; i < limits["C"].length; i++) {
+	var lim = limits["C"][i];
+	var id = lim["id"];
+	if (id in transformers) {
+	    var trans = transformers[id];
+	    if (trans["phases"].length > 2) {
+		trans["phase_C_limit"] = lim["lim"];
+		transformers[id] = trans;
+	    }
+	}
+    }
+    for (trans in transformers) {
+	console.log(trans);
     }
 
     console.log(limits);
