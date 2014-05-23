@@ -92,7 +92,15 @@ function update(phase) {
     }
     // Update transformers
     var trans_powers = powers[phase][counter];
-    console.log(trans_powers);
+    for (power in trans_powers) {
+	var id = power["id"];
+	if (id in transformers) {
+	    var trans = transformers[id];
+	    var lim = trans["phase_" + phase + "_limit"]
+	    console.log(lim);
+	    console.log(power.pow);
+	}
+    }
     // Update the timer
     elapsedTime.innerHTML = '<strong>' + counterToTime(counter) + '</strong>'
     // Update the dataset counter and read a dataset
