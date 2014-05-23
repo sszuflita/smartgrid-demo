@@ -91,7 +91,7 @@ function update(phase) {
         }
     }
     // Update transformers
-    
+    console.log(counter);
     // Update the timer
     elapsedTime.innerHTML = '<strong>' + counterToTime(counter) + '</strong>'
     // Update the dataset counter and read a dataset
