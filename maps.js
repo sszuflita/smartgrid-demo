@@ -379,7 +379,9 @@ function initialize() {
     for (var i = 0; i < limits["A"].length; i++) {
 	var lim = limits["A"][i];
 	var id = lim["id"];
+	console.log(id);
 	var trans = transformers[id];
+	console.log(trans);
 	trans["phase_A_limit"] = lim["lim"];
 	transformers[id] = trans;
 	console.log(transformers[id]);
