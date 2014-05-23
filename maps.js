@@ -7,6 +7,7 @@ var timer = new Array();
 var elapsedTime;
 var timeDiv;
 var transformers = {}; /* Object of all transformers */
+var powers;
 
 /* Function to hide all labels on the map */
 function eraseMarkers(markers) {
@@ -89,6 +90,8 @@ function update(phase) {
             }
         }
     }
+    // Update transformers
+    
     // Update the timer
     elapsedTime.innerHTML = '<strong>' + counterToTime(counter) + '</strong>'
     // Update the dataset counter and read a dataset
@@ -403,6 +406,11 @@ var trans = {
 	    transformers[id] = trans;
 	}
     }
+    // Load in power levels
+    sURL = "http://" + self.location.hostname
+	+ "/smartgrid-demo/preprocess/transformer/trans_power.json";
+    powers = loadJSON(sURL);
+    console.log(powers);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
