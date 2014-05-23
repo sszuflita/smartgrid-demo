@@ -373,7 +373,7 @@ function initialize() {
     }
     /* Get transformer power limits */
     sURL = "http://" + self.location.hostname
-	+ "/smartgrid-demo/preprocess/transformer/trans_limits.json"
+	+ "/smartgrid-demo/preprocess/transformer/trans_limit.json"
     limits = loadJSON(sURL).contents;
     console.log(limits);
 }
