@@ -93,8 +93,10 @@ function update(phase) {
     // Update transformers
     var trans_powers = powers[phase][counter];
     for (power in trans_powers) {
+	console.log(power);
 	var id = power["id"];
 	if (id in transformers) {
+	    console.log(id);
 	    var trans = transformers[id];
 	    var lim = trans["phase_" + phase + "_limit"]
 	    console.log(lim);
@@ -419,7 +421,6 @@ var trans = {
     sURL = "http://" + self.location.hostname
 	+ "/smartgrid-demo/preprocess/transformer/trans_power.json";
     powers = loadJSON(sURL);
-    console.log(powers);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
