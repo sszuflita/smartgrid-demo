@@ -94,7 +94,6 @@ function update(phase) {
     var trans_powers = powers[phase][counter];
     for (var i = 0; i < trans_powers.length; i++) {
 	power = trans_powers[i];
-	console.log(power);
 	var id = power["id"];
 	if (id in transformers) {
 	    var trans = transformers[id];
