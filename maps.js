@@ -370,6 +370,7 @@ function initialize() {
 	    latlng: myLatLng,
 	    handle: circle
 	};
+	transformers[id] = trans;
     }
     /* Get transformer power limits */
     sURL = "http://" + self.location.hostname
