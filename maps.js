@@ -390,12 +390,8 @@ var trans = {
 	var id = lim["id"];
 	if (id in transformers) {
 	    var trans = transformers[id];
-	    if (trans["phases"].length > 1) {
-		console.log(trans);
-		trans["phase_B_limit"] = lim["lim"];
-		transformers[id] = trans;
-		console.log(transformers[id]);
-	    }
+	    trans["phase_B_limit"] = lim["lim"];
+	    transformers[id] = trans;
 	}
     }
     for (var i = 0; i < limits["C"].length; i++) {
@@ -403,17 +399,10 @@ var trans = {
 	var id = lim["id"];
 	if (id in transformers) {
 	    var trans = transformers[id];
-	    if (trans["phases"].length > 2) {
-		trans["phase_C_limit"] = lim["lim"];
-		transformers[id] = trans;
-	    }
+	    trans["phase_C_limit"] = lim["lim"];
+	    transformers[id] = trans;
 	}
     }
-    for (trans in transformers) {
-	console.log(transformers[trans]);
-    }
-
-    console.log(limits);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
