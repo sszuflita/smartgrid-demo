@@ -6,6 +6,7 @@ var numDatasets = 288;
 var timer = new Array();
 var elapsedTime;
 var timeDiv;
+var transformers; /* Object of all transformers */
 
 /* Function to hide all labels on the map */
 function eraseMarkers(markers) {
@@ -335,11 +336,42 @@ function initialize() {
     }  
     
 
+    
+
     // Toggle visibility of labels
     google.maps.event.addListener(map,'zoom_changed',function () {
         if (map.getZoom() < 16.5) eraseMarkers(markers);
         if (map.getZoom() >= 16.5) showMarkers(markers);
     });
+
+    /* write transformers */
+    ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
+    ftable = loadJSON(ftableURL);
+    for (var i = 0; i < ftable.rows.length; i++) {
+	var trans_row = ftable.rows[i];
+	var id = trans_row[0];
+	var phases = trans_row[1];
+        var myLatLng = new google.maps.LatLng(trans_row[3],trans_row[2]);
+
+	var circle = new google.maps.Circle({
+	    center: myLatLng,
+	    radius: 10,
+	    strokeColor: '#FF0000',
+	    strokeOpacity: 0.8,
+	    strokeWeight: 2,
+	    fillColor: '#FF0000',
+	    fillOpacity: 0.35,
+	    map: map
+	});
+
+	var trans = {
+	    id: id,
+	    phases: phases,
+	    latlng: myLatLng,
+	    handle: circle
+	};
+    }
+
 
 }
 google.maps.event.addDomListener(window, 'load', initialize);
