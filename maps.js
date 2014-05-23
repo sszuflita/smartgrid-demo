@@ -410,7 +410,7 @@ var trans = {
 	}
     }
     for (trans in transformers) {
-	console.log(trans);
+	console.log(transformers[trans]);
     }
 
     console.log(limits);
