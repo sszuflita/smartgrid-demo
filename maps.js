@@ -374,11 +374,14 @@ function initialize() {
     /* Get transformer power limits */
     sURL = "http://" + self.location.hostname
 	+ "/smartgrid-demo/preprocess/transformer/trans_limit.json"
-    limits = loadJSON(sURL);
-    console.log(limits);
+    var limits = loadJSON(sURL);
     for (var i = 0; i < limits["A"].length; i++) {
-	lim = limits["A"][i];
-	console.log(lim);
+	var lim = limits["A"][i];
+	var id = lim["id"];
+	var trans = transformers[id];
+	trans["phase_A_limit"] = lim["lim"];
+	transfomers[id] = trans;
+	console.log(transformers[id]);
     }
     console.log(limits);
 }
