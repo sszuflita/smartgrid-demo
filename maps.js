@@ -375,6 +375,10 @@ function initialize() {
     sURL = "http://" + self.location.hostname
 	+ "/smartgrid-demo/preprocess/transformer/trans_limit.json"
     limits = loadJSON(sURL).contents;
+    for (var i = 0; i < limits["A"].length; i++) {
+	lim = limits["A"][i];
+	console.log(lim);
+    }
     console.log(limits);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
