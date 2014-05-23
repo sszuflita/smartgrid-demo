@@ -344,7 +344,7 @@ function initialize() {
         if (map.getZoom() >= 16.5) showMarkers(markers);
     });
 
-    /* write transformers */
+    /* load in transformers */
     ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
     ftable = loadJSON(ftableURL);
     for (var i = 0; i < ftable.rows.length; i++) {
@@ -356,10 +356,10 @@ function initialize() {
 	var circle = new google.maps.Circle({
 	    center: myLatLng,
 	    radius: 10,
-	    strokeColor: 'red',
+	    strokeColor: 'green',
 	    strokeOpacity: 0.8,
 	    strokeWeight: 2,
-	    fillColor: 'red',
+	    fillColor: 'green',
 	    fillOpacity: 0.35,
 	    map: map
 	});
@@ -371,8 +371,11 @@ function initialize() {
 	    handle: circle
 	};
     }
-
-
+    /* Get transformer power limits */
+    sURL = "http://" + self.location.hostname
+	+ "/smartgrid-demo/preprocess/transformer/trans_limits.json"
+    limits = loadJSON(sURL).contents;
+    console.log(limits);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
