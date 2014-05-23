@@ -97,11 +97,14 @@ function update(phase) {
 	console.log(power);
 	var id = power["id"];
 	if (id in transformers) {
-	    console.log(id);
 	    var trans = transformers[id];
 	    var lim = trans["phase_" + phase + "_limit"]
-	    console.log(lim);
-	    console.log(power.pow);
+	    if (power.pow > lim * 0.01) {
+		trans.handle.setOptions(
+		    {strokeColor: 'yellow',
+		     fillColor: 'yellow'});
+	    }
+
 	}
     }
     // Update the timer
