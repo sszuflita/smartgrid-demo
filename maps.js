@@ -220,7 +220,7 @@ function TimeControl(controlDiv) {
 
 function generateChart() {
     var dataSource = [];
-    for (var i = 0; i < len(testCurrents); i++) {
+    for (var i = 0; i < testCurrents.length; i++) {
 	point = {
 	    time: i,
 	    current_A: testCurrents[i]
