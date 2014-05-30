@@ -225,7 +225,7 @@ function generateChart() {
 	    time: i,
 	    current_A: testCurrents[i]
 	};
-	dataSource.push();
+	dataSource.push(point);
     }
     console.log(dataSource);
     console.log(testCurrents);
