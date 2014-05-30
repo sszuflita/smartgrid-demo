@@ -80,8 +80,10 @@ function update(phase) {
                 //        {strokeColor: lines[j].defaultColor});
                 if (frame[i]["amps"] > 0.7 * lines[j][phase]) 
                     lines[j].polyline.setOptions({strokeColor: 'red'});
-                else if (frame[i]["amps"] > 0.01 * lines[j][phase])
+                else if (frame[i]["amps"] > 0.01 * lines[j][phase]) {
                     lines[j].polyline.setOptions({strokeColor: 'yellow'});
+		    console.log(lines[j]);
+		}
                 else
                     lines[j].polyline.setOptions(
                         {strokeColor: lines[j].defaultColor});
