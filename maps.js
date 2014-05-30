@@ -228,6 +228,7 @@ function generateChart() {
 	dataSource.push();
     }
     console.log(dataSource);
+    console.log(testCurrents);
 
     return {
 	dataSource: dataSource,
