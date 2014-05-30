@@ -369,7 +369,7 @@ function initialize() {
 		    { year: 2050, europe: 650, americas: 1231, africa: 1937 }
 		];
 
-		$("#chartContainer").dxChart({
+		$("#lineChart").dxChart({
 		    dataSource: dataSource,
 		    commonSeriesSettings: {
 			argumentField: "year"
