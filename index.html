@@ -6,17 +6,21 @@
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
       #map-canvas { 
-        height: 100%; 
+      height: 100%; 
       }
     </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="Chart.js"></script>
     <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo&sensor=false">
+	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo&sensor=false">
     </script>
     <script type="text/javascript" src="markerwithlabel.js"></script>
     <script type="text/javascript" src="maps.js"></script>
   </head>
   <body>
-      <div id="map-canvas"/> 
-      </div>
-  </body>
+    <div>
+      <canvas id="lineChart" width="400" height="400"></canvas>
+    </div>
+    <div id="map-canvas"/></div>
+</body>
 </html>
