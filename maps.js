@@ -212,6 +212,12 @@ function TimeControl(controlDiv) {
 }
 
 function initialize() {
+    var ctx = $("#lineChart");
+
+    $("#lineChart").click(function() {
+	ctx.css('display', 'none');	
+    });
+
     var mapOptions = {
         center: new google.maps.LatLng(34.116552,-117.631469),
         zoom: 15
@@ -347,7 +353,6 @@ function initialize() {
             });
 	    
 	    google.maps.event.addListener(polyLinePath, 'click', function() {
-		var ctx = $("#lineChart");
 		ctx.css('display', 'inline');
 	    });
             
