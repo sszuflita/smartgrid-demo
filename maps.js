@@ -245,7 +245,7 @@ function initialize() {
     phaseB = loadJSON(sURL).contents;
     sURL = "http://"
 	+ self.location.hostname
-	+ "/smartgrid-demo/preprocess/line_current_C.json";
+nnn	+ "/smartgrid-demo/preprocess/line_current_C.json";
     phaseC = loadJSON(sURL).contents;
 
     // Render DXF
@@ -345,6 +345,10 @@ function initialize() {
                 strokeOpacity: 1.0,
                 strokeWeight: strokeWeight
             });
+	    
+	    google.maps.event.addListener(polyLinePath, 'click', function() {
+		alert("line clicked!");
+	    });
             
             // Cache polylines 
             if (endpoints != undefined) {
