@@ -9,6 +9,8 @@ var timeDiv;
 var transformers = {}; /* Object of all transformers */
 var powers;
 var done = false;
+var testEnd = "15452,ND46572954";
+var testCurrents = [];
 
 /* Function to hide all labels on the map */
 function eraseMarkers(markers) {
@@ -404,6 +406,10 @@ function initialize() {
                 strokeWeight: strokeWeight,
 		ends: endpoints
             });
+
+	    if (endpoints == testEnd) {
+		
+	    }
 	    
 	    google.maps.event.addListener(polyLinePath, 'click', function() {
 		ctx.css('display', 'inline');
@@ -501,6 +507,10 @@ function initialize() {
     sURL = "http://" + self.location.hostname
 	+ "/smartgrid-demo/preprocess/transformer/trans_power.json";
     powers = loadJSON(sURL);
+
+    // Load in currents for charts
+    sURL = "http://" + self.location.hostname
+	+ "/smargrid-demo/preprocess/chart_data.json";
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
