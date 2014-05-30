@@ -458,7 +458,7 @@ function initialize() {
 		    onAnimationComplete : null
 		    
 		};
-		new Chart(ctx).PolarArea(data,options);
+		new Chart(ctx).Line(data,options);
 	    });
             
             // Cache polylines 
