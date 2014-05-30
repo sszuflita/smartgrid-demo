@@ -510,7 +510,7 @@ function initialize() {
 
     // Load in currents for charts
     sURL = "http://" + self.location.hostname
-	+ "/smargrid-demo/preprocess/chart_data.json";
+	+ "/smartgrid-demo/preprocess/chart_data.json";
     testCurrents = loadJSON(sURL);
     console.log(testCurrents);
 }
