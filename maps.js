@@ -245,7 +245,7 @@ function initialize() {
     phaseB = loadJSON(sURL).contents;
     sURL = "http://"
 	+ self.location.hostname
-nnn	+ "/smartgrid-demo/preprocess/line_current_C.json";
+	+ "/smartgrid-demo/preprocess/line_current_C.json";
     phaseC = loadJSON(sURL).contents;
 
     // Render DXF
