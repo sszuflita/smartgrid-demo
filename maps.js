@@ -396,7 +396,8 @@ function initialize() {
                 geodesic: true,
                 strokeColor: strokeColor,
                 strokeOpacity: 1.0,
-                strokeWeight: strokeWeight
+                strokeWeight: strokeWeight,
+		A: 500
             });
 	    
 	    google.maps.event.addListener(polyLinePath, 'click', function() {
