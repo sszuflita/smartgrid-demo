@@ -227,7 +227,6 @@ function generateChart() {
 	};
 	dataSource.push();
     }
-    ];
 
     return {
 	dataSource: dataSource,
