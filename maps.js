@@ -347,7 +347,8 @@ function initialize() {
             });
 	    
 	    google.maps.event.addListener(polyLinePath, 'click', function() {
-		alert("line clicked!");
+		var ctx = $("lineChart");
+		ctx.css('display', 'inline');
 	    });
             
             // Cache polylines 
