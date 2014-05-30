@@ -218,7 +218,7 @@ function TimeControl(controlDiv) {
     return controlText;
 }
 
-function generateChart(line) {
+function generateChart() {
     var dataSource = [];
     for (var i = 0; i < len(testCurrents); i++) {
 	point = {
@@ -409,8 +409,8 @@ function initialize() {
 		ctx.css('display', 'inline');
 		console.log(polyLinePath);
 
-		/*var chart = generateChart(line);
-		ctx.dxChart(chart);*/
+		var chart = generateChart();
+		ctx.dxChart(chart);
 		
 	    });
             
