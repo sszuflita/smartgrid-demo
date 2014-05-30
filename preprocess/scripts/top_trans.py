@@ -1,4 +1,3 @@
-
 from xlrd import open_workbook
 from mmap import mmap, ACCESS_READ
 import json
