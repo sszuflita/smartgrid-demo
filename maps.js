@@ -215,7 +215,7 @@ function initialize() {
     var ctx = $("#lineChart");
 
     $("#lineChart").click(function() {
-	ctx.css('display', 'none');	
+	ctx.css('display', 'none');
     });
 
     var mapOptions = {
