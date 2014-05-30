@@ -402,12 +402,12 @@ function initialize() {
                 strokeColor: strokeColor,
                 strokeOpacity: 1.0,
                 strokeWeight: strokeWeight,
-		A: 500
+		ends: endpoints
             });
 	    
 	    google.maps.event.addListener(polyLinePath, 'click', function() {
 		ctx.css('display', 'inline');
-		console.log(lines);
+		console.log(polyLinePath);
 
 		/*var chart = generateChart(line);
 		ctx.dxChart(chart);*/
