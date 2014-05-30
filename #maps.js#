@@ -235,7 +235,7 @@ function generateChart(line) {
 	    argumentField: "time"
 	},
 	series: [
-	    { valueField: "current_A", name: "Phase A Current" },
+	    { valueField: "Phase A current", name: "Europe" },
 	],
 	argumentAxis:{
 	    grid:{
@@ -245,7 +245,7 @@ function generateChart(line) {
 	tooltip:{
 	    enabled: true
 	},
-	title: "Current",
+	title: "Power",
 	legend: {
 	    verticalAlignment: "bottom",
 	    horizontalAlignment: "center"
