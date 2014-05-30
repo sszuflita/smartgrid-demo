@@ -8,6 +8,7 @@ var elapsedTime;
 var timeDiv;
 var transformers = {}; /* Object of all transformers */
 var powers;
+var done = false;
 
 /* Function to hide all labels on the map */
 function eraseMarkers(markers) {
@@ -82,7 +83,9 @@ function update(phase) {
                     lines[j].polyline.setOptions({strokeColor: 'red'});
                 else if (frame[i]["amps"] > 0.01 * lines[j][phase]) {
                     lines[j].polyline.setOptions({strokeColor: 'yellow'});
-		    console.log(lines[j]);
+		    if (!done)
+			console.log(lines[j]);
+		    done = true;
 		}
                 else
                     lines[j].polyline.setOptions(
