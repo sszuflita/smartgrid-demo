@@ -218,7 +218,7 @@ function TimeControl(controlDiv) {
     return controlText;
 }
 
-function generateChart() {
+function generateChart(endpoints) {
     // Find line idx
     var idx = 0;
     var sURL = "http://"
@@ -227,15 +227,15 @@ function generateChart() {
     frame = loadJSON(sURL).contents;
     for (var i = 0; i < frame.length; i++) {
         // Look for the corresponding polyline
-        for (var j = 0; j < lines.length; j++) {
-            idx1 = lines[j].ends.indexOf(frame[i]["from"]);
-            idx2 = lines[j].ends.indexOf(frame[i]["to"]);
-            if (idx1 == idx2 && idx1 > -1)
-                idx2 = lines[j].ends.indexOf(frame[i]["to"], idx1 + 1);
-            if (idx1 > -1 && idx2 > -1) {
-                idx = i;
-                break;
-            }
+        idx1 = endpoints.indexOf(frame[i]["from"]);
+        idx2 = endpoints.indexOf(frame[i]["to"]);
+        if (idx1 == idx2 && idx1 > -1)
+            idx2 = endpoints.indexOf(frame[i]["to"], idx1 + 1);
+        if (idx1 > -1 && idx2 > -1) {
+            idx = i;
+            break;
+        }
+    }
 
     // Load in currents for charts
     sURL = "http://" + self.location.hostname
