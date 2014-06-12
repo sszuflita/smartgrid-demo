@@ -9,8 +9,8 @@ var timeDiv;
 var transformers = {}; /* Object of all transformers */
 var powers;
 var done = false;
-var testEnd = "15452,ND46572954";
-var testCurrents = [];
+//var testEnd = "15452,ND46572954";
+//var testCurrents = [];
 
 /* Function to hide all labels on the map */
 function eraseMarkers(markers) {
@@ -73,7 +73,7 @@ function update(phase) {
             idx1 = lines[j].ends.indexOf(frame[i]["from"]);
             idx2 = lines[j].ends.indexOf(frame[i]["to"]);
             if (idx1 == idx2 && idx1 > -1)
-		idx2 = lines[j].ends.indexOf(frame[i]["to"], idx1 + 1);
+                idx2 = lines[j].ends.indexOf(frame[i]["to"], idx1 + 1);
             if (idx1 > -1 && idx2 > -1) {
                 // Change color to red if the current is above limit
                 //if (frame[i]["amps"] > lines[j][phase]) 
@@ -85,15 +85,15 @@ function update(phase) {
                     lines[j].polyline.setOptions({strokeColor: 'red'});
                 else if (frame[i]["amps"] > 0.01 * lines[j][phase]) {
                     lines[j].polyline.setOptions({strokeColor: 'yellow'});
-		    if (!done)
-			console.log(lines[j]);
-		    done = true;
-		}
-                else
-                    lines[j].polyline.setOptions(
-                        {strokeColor: lines[j].defaultColor});
+                if (!done)
+                    console.log(lines[j]);
+                done = true;
+            }
+            else
+                lines[j].polyline.setOptions(
+                    {strokeColor: lines[j].defaultColor});
 
-                break;
+            break;
             }
         }
     }
@@ -169,21 +169,21 @@ function PhaseControl(controlDiv, phase) {
     google.maps.event.addDomListener(controlUI, 'click', function() {
 	if (timer.length > 0) {
             // Clear ongoing demo for other phases
-            if (map.controls[google.maps.ControlPosition.TOP_LEFT].length > 0)
-		map.controls[google.maps.ControlPosition.TOP_LEFT].pop();
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
-            counter = 0;
-            for (i = 0; i < numDatasets; i ++) 
-		clearTimeout(timer[i]); 
-            for (i = 0; i < numDatasets; i ++) 
-		timer[i] = setTimeout(function(){update(phase)}, 100 * i);   
-            timer[numDatasets] = setTimeout(function(){clearmap()}, 100 * numDatasets);      
+        if (map.controls[google.maps.ControlPosition.TOP_LEFT].length > 0)
+            map.controls[google.maps.ControlPosition.TOP_LEFT].pop();
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
+        counter = 0;
+        for (i = 0; i < numDatasets; i ++) 
+            clearTimeout(timer[i]); 
+        for (i = 0; i < numDatasets; i ++) 
+            timer[i] = setTimeout(function(){update(phase)}, 100 * i);   
+        timer[numDatasets] = setTimeout(function(){clearmap()}, 100 * numDatasets);      
 	}
 	else {
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
-            for (i = 0; i < numDatasets; i ++) 
-		timer.push(setTimeout(function(){update(phase)}, 100 * i));
-            timer.push(setTimeout(function(){clearmap()}, 100 * numDatasets));
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(timeDiv);
+        for (i = 0; i < numDatasets; i ++) 
+            timer.push(setTimeout(function(){update(phase)}, 100 * i));
+        timer.push(setTimeout(function(){clearmap()}, 100 * numDatasets));
 	}
     });
 }
@@ -219,44 +219,67 @@ function TimeControl(controlDiv) {
 }
 
 function generateChart() {
+    // Find line idx
+    var idx = 0;
+    var sURL = "http://"
+    + self.location.hostname 
+    + "/smartgrid-demo/preprocess/A/line0.json";
+    frame = loadJSON(sURL).contents;
+    for (var i = 0; i < frame.length; i++) {
+        // Look for the corresponding polyline
+        for (var j = 0; j < lines.length; j++) {
+            idx1 = lines[j].ends.indexOf(frame[i]["from"]);
+            idx2 = lines[j].ends.indexOf(frame[i]["to"]);
+            if (idx1 == idx2 && idx1 > -1)
+                idx2 = lines[j].ends.indexOf(frame[i]["to"], idx1 + 1);
+            if (idx1 > -1 && idx2 > -1) {
+                idx = i;
+                break;
+            }
+
+    // Load in currents for charts
+    sURL = "http://" + self.location.hostname
+    + "/smartgrid-demo/preprocess/A_chart/line" + str(idx)+".json";
+    chartCurrents = loadJSON(sURL);
+
     var dataSource = [];
-    for (var i = 0; i < testCurrents.length; i++) {
-	point = {
-	    time: i,
-	    current_A: testCurrents[i]
-	};
-	dataSource.push(point);
+    for (var i = 0; i < chartCurrents.length; i++) {
+        point = {
+            time: i,
+            current_A: chartCurrents[i]
+        };
+        dataSource.push(point);
     }
     console.log(dataSource);
-    console.log(testCurrents);
+    console.log(chartCurrents);
 
     return {
-	dataSource: dataSource,
-	commonSeriesSettings: {
-	    argumentField: "time"
-	},
-	series: [
-	    { valueField: "current_A", name: "Phase A Current" },
-	],
-	argumentAxis:{
-	    grid:{
-		visible: true
-	    }
-	},
-	tooltip:{
-	    enabled: true
-	},
-	title: "Current",
-	legend: {
-	    verticalAlignment: "bottom",
-	    horizontalAlignment: "center"
-	},
-	commonPaneSettings: {
-	    border:{
-		visible: true,
-		right: false
-	    }       
-	}
+        dataSource: dataSource,
+        commonSeriesSettings: {
+            argumentField: "time"
+        },
+        series: [
+            { valueField: "current_A", name: "Phase A Current" },
+        ],
+        argumentAxis:{
+            grid:{
+                visible: true
+            }
+        },
+        tooltip:{
+            enabled: true
+        },
+        title: "Current",
+        legend: {
+            verticalAlignment: "bottom",
+            horizontalAlignment: "center"
+        },
+        commonPaneSettings: {
+            border:{
+                visible: true,
+                right: false
+            }       
+        }
     }
 }
 
@@ -264,7 +287,7 @@ function initialize() {
     var ctx = $("#lineChart");
 
     $("#lineChart").click(function() {
-	ctx.css('display', 'none');
+        ctx.css('display', 'none');
     });
 
     var mapOptions = {
@@ -286,7 +309,7 @@ function initialize() {
 
     sURL = "http://"
         + self.location.hostname
-        + "/smartgrid-demo/new.json";
+        + "/smartgrid-demo/rossi.json";
     data = loadJSON(sURL);
     features = data.features;
 
@@ -345,29 +368,6 @@ function initialize() {
                 }   
             }
         }
-        else if (layer == "UG_TRANSFORMERS") {
-            coords = feature.geometry.geometries
-            coords = coords[0]["coordinates"];
-            GPSCoord = dxfToGPS(coords[0]);
-            x = GPSCoord[0] + 0.00004;
-            y = GPSCoord[1];
-
-            if (!isNaN(x) && !isNaN(y)) {
-                var myLatlng = new google.maps.LatLng(y, x);
-                var opts = {
-                    strokeColor: '#000000',
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: '#000000',
-                    fillOpacity: 0.5,
-                    map: map,
-                    center: myLatlng,
-                    radius: 5
-                };
-                // Add the circle to the map.
-                ug_trans = new google.maps.Circle(opts);    
-            }  
-        }
         else if (coords != undefined) {
             // Check for current limits
             entity = feature.properties.ExtendedEntity;
@@ -399,21 +399,15 @@ function initialize() {
                 strokeColor: strokeColor,
                 strokeOpacity: 1.0,
                 strokeWeight: strokeWeight,
-		ends: endpoints
+                ends: endpoints
             });
 
-	    if (endpoints == testEnd) {
-		
-	    }
-	    
-	    google.maps.event.addListener(polyLinePath, 'click', function() {
-		ctx.css('display', 'inline');
-		console.log(polyLinePath);
-
-		var chart = generateChart();
-		ctx.dxChart(chart);
-		
-	    });
+            google.maps.event.addListener(polyLinePath, 'click', function() {
+                ctx.css('display', 'inline');
+                console.log(polyLinePath);
+                var chart = generateChart(endpoints);
+                ctx.dxChart(chart);
+            });
             
             // Cache polylines 
             if (endpoints != undefined) {
@@ -443,21 +437,21 @@ function initialize() {
     ftableURL = "https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20*%20FROM%201alh4YI5KOpfadgxU36mkwx1SvHz1bbmjUsyOpDgV&key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo";
     ftable = loadJSON(ftableURL);
     for (var i = 0; i < ftable.rows.length; i++) {
-	var trans_row = ftable.rows[i];
-	var id = trans_row[0];
-	var phases = trans_row[1];
+        var trans_row = ftable.rows[i];
+        var id = trans_row[0];
+        var phases = trans_row[1];
         var myLatLng = new google.maps.LatLng(trans_row[3],trans_row[2]);
 
-	var circle = new google.maps.Circle({
-	    center: myLatLng,
-	    radius: 10,
-	    strokeColor: 'green',
-	    strokeOpacity: 0.8,
-	    strokeWeight: 2,
-	    fillColor: 'green',
-	    fillOpacity: 0.35,
-	    map: map
-	});
+        var circle = new google.maps.Circle({
+            center: myLatLng,
+            radius: 10,
+            strokeColor: 'green',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: 'green',
+            fillOpacity: 0.35,
+            map: map
+        });
 
 	var trans = {
 	    id: id,
@@ -472,42 +466,36 @@ function initialize() {
 	+ "/smartgrid-demo/preprocess/transformer/trans_limit.json"
     var limits = loadJSON(sURL);
     for (var i = 0; i < limits["A"].length; i++) {
-	var lim = limits["A"][i];
-	var id = lim["id"];
-	if (id in transformers) {
-	    var trans = transformers[id];
-	    trans["phase_A_limit"] = lim["lim"];
-	    transformers[id] = trans;
-	}
+        var lim = limits["A"][i];
+        var id = lim["id"];
+        if (id in transformers) {
+            var trans = transformers[id];
+            trans["phase_A_limit"] = lim["lim"];
+            transformers[id] = trans;
+        }
     }
     for (var i = 0; i < limits["B"].length; i++) {
-	var lim = limits["B"][i];
-	var id = lim["id"];
-	if (id in transformers) {
-	    var trans = transformers[id];
-	    trans["phase_B_limit"] = lim["lim"];
-	    transformers[id] = trans;
-	}
+        var lim = limits["B"][i];
+        var id = lim["id"];
+        if (id in transformers) {
+            var trans = transformers[id];
+            trans["phase_B_limit"] = lim["lim"];
+            transformers[id] = trans;
+        }
     }
     for (var i = 0; i < limits["C"].length; i++) {
-	var lim = limits["C"][i];
-	var id = lim["id"];
-	if (id in transformers) {
-	    var trans = transformers[id];
-	    trans["phase_C_limit"] = lim["lim"];
-	    transformers[id] = trans;
-	}
+        var lim = limits["C"][i];
+        var id = lim["id"];
+        if (id in transformers) {
+            var trans = transformers[id];
+            trans["phase_C_limit"] = lim["lim"];
+            transformers[id] = trans;
+        }
     }
     // Load in power levels
     sURL = "http://" + self.location.hostname
 	+ "/smartgrid-demo/preprocess/transformer/trans_power.json";
     powers = loadJSON(sURL);
-
-    // Load in currents for charts
-    sURL = "http://" + self.location.hostname
-	+ "/smartgrid-demo/preprocess/chart_data.json";
-    testCurrents = loadJSON(sURL);
-    console.log(testCurrents);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 

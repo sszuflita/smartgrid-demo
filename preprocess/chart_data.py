@@ -1,15 +1,26 @@
 import json
 
-outfile = open("chart_data.json", "w")
-outfile.write("[")
+chart = []
+for i in range(523):
+	chart.append([])
+
 for i in range(279):
-    if (i > 0):
-        outfile.write(", ")
-    filename = "A/line" + str(i) + ".json"
-    file = open(filename)
-    json_data = file.read()
-    data = json.loads(json_data)
-    amps = data["contents"][0]["amps"]
-    outfile.write(str(amps))
-outfile.write("]")
+	filename = "A/line" + str(i) + ".json"
+	file = open(filename)
+	json_data = file.read()
+	data = json.loads(json_data)
+	for j in range(523):
+		amps = data["contents"][j]["amps"]
+		chart[j].append(amps)
+
+for j in range(523):
+	chart.append([])
+	outfile = open("A_chart/line" + str(j)+ ".json", "w")
+	outfile.write("[")
+	for i in range(279):
+		if (i > 0):
+			outfile.write(", ")
+		outfile.write(str(chart[j][i]))
+	outfile.write("]")
+	outfile.close()
 
