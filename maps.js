@@ -28,7 +28,7 @@ function showMarkers(markers) {
    on success. Pop an alert otherwise. */
 function loadJSON(sURL) {
     oRequest.open("GET", sURL, false);
-    oRequest.send(null)
+    oRequest.send(null);
     
     if (oRequest.status==200)
         return JSON.parse(oRequest.responseText);
@@ -64,7 +64,7 @@ function counterToTime(counter) {
 function update(phase) {
     var sURL = "http://"
 	+ self.location.hostname 
-	+ "/smartgrid-demo/preprocess/"
+    + "/smartgrid-demo/preprocess/"
 	+ phase +"/line" + counter.toString() + ".json";
     frame = loadJSON(sURL).contents;
     for (var i = 0; i < frame.length; i++) {
@@ -220,7 +220,7 @@ function TimeControl(controlDiv) {
 
 function generateChart(endpoints) {
     // Find line idx
-    var idx = 0;
+    var idx = -1;
     var sURL = "http://"
     + self.location.hostname 
     + "/smartgrid-demo/preprocess/A/line0.json";
@@ -237,21 +237,35 @@ function generateChart(endpoints) {
         }
     }
 
+    if (idx == -1)
+        return;
+
     // Load in currents for charts
-    sURL = "http://" + self.location.hostname
-    + "/smartgrid-demo/preprocess/A_chart/line" + str(idx)+".json";
-    chartCurrents = loadJSON(sURL);
+    sURL = "http://" 
+    + self.location.hostname
+    + "/smartgrid-demo/preprocess/A_chart/line" + idx.toString() +".json";
+    chartCurrents_A = loadJSON(sURL);
+
+    sURL = "http://" 
+    + self.location.hostname
+    + "/smartgrid-demo/preprocess/B_chart/line" + idx.toString() +".json";
+    chartCurrents_B = loadJSON(sURL);
+
+    sURL = "http://" 
+    + self.location.hostname
+    + "/smartgrid-demo/preprocess/B_chart/line" + idx.toString() +".json";
+    chartCurrents_C = loadJSON(sURL);
 
     var dataSource = [];
-    for (var i = 0; i < chartCurrents.length; i++) {
+    for (var i = 0; i < chartCurrents_A.length; i++) {
         point = {
             time: i,
-            current_A: chartCurrents[i]
+            current_A: chartCurrents_A[i],
+            current_B: chartCurrents_B[i],
+            current_C: chartCurrents_C[i]
         };
         dataSource.push(point);
     }
-    console.log(dataSource);
-    console.log(chartCurrents);
 
     return {
         dataSource: dataSource,
@@ -259,7 +273,9 @@ function generateChart(endpoints) {
             argumentField: "time"
         },
         series: [
-            { valueField: "current_A", name: "Phase A Current" },
+            { valueField: "current_A", name: "Phase A Current", color: '#66cc33'},
+            { valueField: "current_B", name: "Phase B Current", color: '#35a2f4'},
+            { valueField: "current_C", name: "Phase C Current", color: '#ef4e3a'}
         ],
         argumentAxis:{
             grid:{
@@ -314,16 +330,16 @@ function initialize() {
     features = data.features;
 
     sURL = "http://"
-	+ self.location.hostname
-	+ "/smartgrid-demo/preprocess/line_current_A.json";
+	    + self.location.hostname
+	    + "/smartgrid-demo/preprocess/line_current_A.json";
     phaseA = loadJSON(sURL).contents;
     sURL = "http://"
-	+ self.location.hostname
-	+ "/smartgrid-demo/preprocess/line_current_B.json";
+	    + self.location.hostname
+        + "/smartgrid-demo/preprocess/line_current_B.json";
     phaseB = loadJSON(sURL).contents;
     sURL = "http://"
-	+ self.location.hostname
-	+ "/smartgrid-demo/preprocess/line_current_C.json";
+	    + self.location.hostname
+    + "/smartgrid-demo/preprocess/line_current_C.json";
     phaseC = loadJSON(sURL).contents;
 
     // Render DXF
@@ -371,11 +387,14 @@ function initialize() {
         else if (coords != undefined) {
             // Check for current limits
             entity = feature.properties.ExtendedEntity;
-            var endpoints, IA, IB, IC;
+            var endpoints, IA, IB, IC, idx1, idx2;
             var defaultColor = strokeColor;
             for (var j = 0; j < phaseA.length; j++) {
-                if (entity.indexOf(phaseA[j]["to"]) > -1 &&
-                    entity.indexOf(phaseA[j]["from"]) > -1) {
+                idx1 = entity.indexOf(phaseA[j]["from"]);
+                idx2 = entity.indexOf(phaseA[j]["to"]);
+                if (idx1 == idx2 && idx1 > -1)
+                    idx2 = endpoints.indexOf(phaseA[j]["to"], idx1 + 1);
+                if (idx1 > -1 && idx2 > -1) {
                     endpoints = phaseA[j]["from"] + ',' + phaseA[j]["to"];
                     IA = phaseA[j]["amps"];
                     IB = phaseB[j]["amps"];
@@ -401,13 +420,6 @@ function initialize() {
                 strokeWeight: strokeWeight,
                 ends: endpoints
             });
-
-            google.maps.event.addListener(polyLinePath, 'click', function() {
-                ctx.css('display', 'inline');
-                console.log(polyLinePath);
-                var chart = generateChart(endpoints);
-                ctx.dxChart(chart);
-            });
             
             // Cache polylines 
             if (endpoints != undefined) {
@@ -424,7 +436,17 @@ function initialize() {
         }
     }  
     
-
+    //var myLine;
+    for (var i = 0; i < lines.length; i++) {
+        //myLine = lines[i];
+        google.maps.event.addListener(lines[i].polyline, 'click', function() {
+            ctx.css('display', 'inline');
+            //var chart = generateChart(myLine.ends);
+            console.log(this.ends);
+            var chart = generateChart(this.ends);
+            ctx.dxChart(chart);
+        });
+    }
     
 
     // Toggle visibility of labels
@@ -462,8 +484,9 @@ function initialize() {
 	transformers[id] = trans;
     }
     /* Get transformer power limits */
-    sURL = "http://" + self.location.hostname
-	+ "/smartgrid-demo/preprocess/transformer/trans_limit.json"
+    sURL = "http://" 
+    + self.location.hostname
+    + "/smartgrid-demo/preprocess/transformer/trans_limit.json"
     var limits = loadJSON(sURL);
     for (var i = 0; i < limits["A"].length; i++) {
         var lim = limits["A"][i];
@@ -493,8 +516,9 @@ function initialize() {
         }
     }
     // Load in power levels
-    sURL = "http://" + self.location.hostname
-	+ "/smartgrid-demo/preprocess/transformer/trans_power.json";
+    sURL = "http://" 
+    + self.location.hostname
+    + "/smartgrid-demo/preprocess/transformer/trans_power.json";
     powers = loadJSON(sURL);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
