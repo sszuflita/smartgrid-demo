@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { 
+      height: 100%; 
+      }
+      #lineChart {
+      position: absolute;
+      left: 40%;
+      top: 40%;
+      width: 400px;
+      height: 400px;
+      z-index: 1;
+      background: white;
+      display: none;
+      }
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="Lib/js/globalize.min.js"></script>
+    <script src="Lib/js/dx.chartjs.js"></script>
+    <script type="text/javascript"
+	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGvnpUsrJQxZhSYddRBZH6swSDD7nrSwo&sensor=false">
+    </script>
+    <script type="text/javascript" src="markerwithlabel.js"></script>
+    <script type="text/javascript" src="maps.js"></script>
+  </head>
+  <body>
+    <div id="lineChart"></div>
+    <div id="map-canvas"></div>
+</body>
+</html>
